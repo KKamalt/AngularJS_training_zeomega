@@ -20,6 +20,7 @@ Make sure you have the following software installed on your machine:
 ```jsx
 https://github.com/KKamalt/AngularJS_training_zeomega
 ```
+checkout to 'main' branch
 
 Open the Folder Run the below commands to run the Data Managment json server
 
@@ -33,4 +34,4 @@ Please make sure to run the with port number ‘7274’ since it is defined the 
 2. **Searching Products**: Use the search bar to filter products by name.
 3. **Managing the Cart**: Products can be added to the cart by clicking the "Add to Cart" button next to each product in the list. In the shopping cart section, you can adjust the quantity of each item or remove it entirely.
 
-## IMP : Please make note that  don’t run this through the live server since it’s auto-refresh feature will effect the funtionality of the cart related Data
+## IMP : Please make note that  don’t run this through the live server since it’s auto-refresh feature will effect the funtionality of the cart related Data. Recomended way is open productsCart.html inside the chrom browser using open with chrome app.
