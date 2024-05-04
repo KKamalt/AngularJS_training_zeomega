@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="productsCart.css">
+</head>
+<body ng-app="productsApp">
+    <h1>Products Managment Assessment</h1>
+    <div class="container">
+        <div class="left-panel" ng-controller="productsController">
+            <h2>Add Products 🧺</i></h2>
+            <div class="input-wrapper">
+                <label for="product.name">Product name</label>
+                <input type="text" ng-model="product.name" placeholder="Enter Your Product name" class="input">
+            </div>
+            <div class="input-wrapper">
+                <label for="product.price">Price</label>
+                <input type="number" ng-model="product.price" placeholder="Enter the Price" class="input">
+            </div>
+            <button ng-click="addNewProduct(product)" class="add-to-products-button">Add Product</button>
+            <br><br>
+            <label for="">Search &#128269;</label>
+            <input class="input" type="text" placeholder="Enter the product name" ng-model="searchProduct">
+            <br><br>
+            <h2 class="product-list">
+                Product List 📋;
+            </h2>            
+            <table id="productTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Unit Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in products | filter:searchProduct">
+                        <td ng-bind="item.id"></td><br>
+                        <td ng-bind="item.name"></td><br>
+                        <td ng-bind="item.price"></td><br>
+                        <td><button ng-click="addToCart(item)" class="btn-add-to-cart">Add to Cart</button></td>
+                    </tr>
+                    <tr ng-if="(products | filter:searchProduct).length === 0">
+                        <td colspan="3" class="no-results">No results found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="right-panel" ng-controller="cartController">
+            <h2>Shopping Cart &#x1F6D2;</h2>
+            <table id="cartTable">
+                <thead>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Name</th>
+                        <th>Cost</th>
+                        <th>Units</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in cart">
+                        <td ng-bind="item.id"></td>
+                        <td ng-bind="item.name"></td>
+                        <td>{{item | calculateCost}}</td>
+                        <td><input type="number" ng-model="item.units" min="1"></td>
+                        <td style="text-align: center;"><button class="close-button" ng-click="remove(item)">X</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2 class="text-total" style="text-align: center 12px;">Total: ₹{{ cart | totalCost | number:2}}</h2>
+        </div>
+    </div>
+</div>
+<script src="angular.js"></script>
+<script>
+
+        // Creating an angularJS app to manage the products app
+        var productsApp = angular.module('productsApp', []);
+
+        // Define the filter function
+        productsApp.filter('calculateCost', function(){
+            return function(item){
+                if (!item.units || item.units<=0){
+                    window.alert('Units Value should not be less than one')
+                    return item.price
+                }
+                return item.price * item.units;
+            };
+        });
+
+        productsApp.filter('totalCost', function(){
+            return function(cart){
+                var totalCost = 0;
+                for (var i = 0; i < cart.length; i++) {
+                    totalCost += cart[i].price * cart[i].units;
+                }
+                return totalCost;
+            }
+        });
+
+
+
+
+        // Defining a value which holds the server address to manage the products data server api calls/request
+        productsApp.value('productsEndpoint', 'http://localhost:7274/products');
+
+
+        // Defining a productsAPI which takes the server and makes the api calls GET/POST/PUT ...
+        productsApp.factory('productAppApi', function($http, productsEndpoint){
+
+            // Defining a funtion which handles the GET request and returns the data from respone
+            function getAll(){
+                return $http.get(productsEndpoint)
+                .then(function(response){
+                    return response.data;
+                })
+                .catch(function(error) {
+                    console.error('Error saving product:', error);
+                    throw error;
+                });
+            };
+
+            // Defining the funtion which handles the POST request to insert the data to the server
+            function save(productsData){
+                    return $http.post(productsEndpoint, productsData)
+                        .then(function(response){
+                            return response.data;
+                        });
+
+            };
+
+            function remove(productsData){
+                return $http.delete(productsEndpoint + '/' + productsData.id)
+                        .then(function(respone){
+                            return respone.data;
+                        });
+            };
+
+            return {
+                getAll : getAll,
+                save : save,
+                remove : remove
+            };
+        });
+
+        // Defining a angularJS service which will handle the products data and operations
+        productsApp.service('productListServices', function(productAppApi){
+            this.createNewProduct = function(newProductData){
+                var newProduct = {
+                    id : newProductData.id,
+                    name : newProductData.name,
+                    price : newProductData.price
+                };
+                console.log(newProduct)
+                return newProduct;
+            };
+
+        });
+
+
+        productsApp.service('cartServices', function(){
+            this.createCartlist = function(newCartItemData){
+                var newCartItem = {
+                    id : newCartItemData.id,
+                    name : newCartItemData.name,
+                    price : newCartItemData.price,
+                    units : 1
+                }
+                return newCartItem;
+            };
+        });
+
+        productsApp.service('cartDataService', function() {
+                var cart = [];
+
+                return {
+                    getCart: function() {
+                        return cart;
+                    },
+                    addToCart: function(item) {
+                        var existingItem = cart.find(function(cartItem) {
+                            return cartItem.id === item.id;
+                        });
+
+                        if (existingItem) {
+                            existingItem.units++;
+                            existingItem.cost = existingItem.units * existingItem.price
+                        } else {
+                            cart.push({
+                                id: item.id,
+                                name: item.name,
+                                price: item.price,
+                                units: 1,
+                                cost: item.price
+                            });
+                        }
+                    },
+                    removeFromCart: function(item) {
+                        var index = cart.findIndex(function(cartItem) {
+                            return cartItem.id === item.id;
+                        });
+                        if (index !== -1) {
+                            cart.splice(index, 1);
+                        }
+                    }
+                };
+            });
+
+            productsApp.controller('cartController', function($scope, cartDataService,) {
+                $scope.cart = cartDataService.getCart();
+
+                $scope.remove = function(item){
+                    cartDataService.removeFromCart(item);
+                }
+
+            });
+
+        productsApp.controller('productsController', function($scope, productListServices, productAppApi, cartServices,
+                                 productsEndpoint, cartDataService){
+            $scope.products = [];
+
+            $scope.getAllProducts = function() {
+                productAppApi.getAll(productsEndpoint)
+                    .then(function(products) {
+                        $scope.products = products;
+                    });
+            };
+
+            $scope.getAllProducts();
+
+            $scope.addNewProduct = function(newProduct){
+                if (!newProduct || !newProduct.name || !newProduct.price) {
+                    window.alert('Product Name and Price are mandatory');
+                    return; 
+                }
+                if (newProduct.price<0){
+                    window.alert('Product price should not be less than zero')
+                    return;
+                }
+                if (!/^[a-zA-Z]+$/.test(newProduct.name)){
+                    window.alert('Please enter a valid name! Name should be aphabetic')
+                    return ;
+                }
+                if($scope.products.length != 0){
+                    newProduct.id = ++$scope.products[$scope.products.length-1].id
+                    console.log(newProduct)
+                    console.log($scope.products)
+                }
+                else{
+                    newProduct.id = 1;
+                }
+                var productsData =  productListServices.createNewProduct(newProduct);
+                productAppApi.save(productsData);
+                $scope.products.push(productsData);
+                window.alert('Product added successfully')
+                // $scope.reload()
+            };
+
+            $scope.addToCart = function(newCartItemData) {
+                    cartDataService.addToCart(newCartItemData);
+            };
+        });
+
+
+
+    </script>
+</body>
+</html>

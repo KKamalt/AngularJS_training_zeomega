@@ -1,0 +1,238 @@
+body {
+    font-family: OCR A Std, monospace;
+    margin: 0;
+    padding: 0;
+}
+
+.text-total {
+    color: #0f2587;
+}
+
+h1 {
+    text-align: center;
+    font-family: Optima, sans-serif;
+    font-weight: 900;
+    background-image: linear-gradient(to right, #10b981, #60a5fa); /* bg-gradient-to-r to-emerald-600 from-sky-400 */
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent; /* text-transparent */
+}
+
+.no-results {
+    color: red;
+}
+
+
+.product-list {
+    background-image: linear-gradient(to right, #270e48, #324e46); /* Define your gradient colors */
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-panel, .right-panel {
+    flex: 0 0 48%;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.left-panel {
+    background-color: #f9f9f9;
+    border-right: 1px solid #ddd;
+}
+
+.right-panel {
+    background-color: #fff;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;  
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background: linear-gradient(135deg, #cdf432, #8dcb9c);
+    color: rgb(23, 25, 33);
+}
+
+/* Add the Products Button */
+.add-to-products-button {
+    padding: 1.3em 3em;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #000;
+    background-color: #fff;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+}
+
+.add-to-products-button:hover {
+    background-color: #23c483;
+    box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+    color: #fff;
+    transform: translateY(-7px);
+}
+
+.add-to-products-button:active {
+    transform: translateY(-1px);
+}
+
+/* ADd to cart button */
+
+.btn-add-to-cart {
+    --clr-font-main: hsla(0 0% 20% / 100);
+    --btn-bg-1: hsla(194 100% 69% / 1);
+    --btn-bg-2: hsla(217 100% 56% / 1);
+    --btn-bg-color: rgb(255, 252, 252);
+    --radii: 0.5em;
+    cursor: pointer;
+    padding: 0.9em 1.4em;
+    min-width: 40px;
+    min-height: 32px;
+    font-size: var(--size, 1rem);
+    font-family: "Segoe UI", system-ui, sans-serif;
+    font-weight: 500;
+    transition: 0.8s;
+    background-size: 280% auto;
+    background-image: linear-gradient(325deg, var(--btn-bg-2) 0%, var(--btn-bg-1) 55%, var(--btn-bg-2) 90%);
+    border: none;
+    border-radius: var(--radii);
+    color: var(--btn-bg-color);
+    box-shadow: 0px 0px 20px rgba(71, 184, 255, 0.5), 0px 5px 5px -1px rgba(240, 241, 242, 0.25), inset 4px 4px 8px rgba(175, 230, 255, 0.5), inset -4px -4px 8px rgba(19, 95, 216, 0.35);
+  }
+
+  .btn-add-to-cart:hover {
+    background-position: right top;
+  }
+
+  .btn-add-to-cart:focus,
+  .btn-add-to-cart:focus-visible,
+  .btn-add-to-cart:active {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--btn-bg-color), 0 0 0 6px var(--btn-bg-2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-add-to-cart {
+      transition: linear;
+    }
+  }
+
+  /* Remove from the cart button */
+.close-button {
+  position: relative;
+  background-color: transparent;
+  color: #e8e8e8;
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: 10px;
+  width: 150px;
+  height: 60px;
+  border: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(51, 51, 51, 0.2);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.close-button::before {
+  content: "X";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(135deg,#7b4397,#dc2430 );
+  transform: translate(0%,90%);
+  z-index: 99;
+  position: relative;
+  transform-origin: bottom;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.close-button::after {
+  content: "Remove";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #333;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform-origin: top;
+  transform: translate(0%,-100%);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.close-button:hover::before {
+  transform: translate(0%,0%);
+}
+
+.close-button:hover::after {
+  transform: translate(0%,-200%);
+}
+
+.close-button:focus {
+  outline: none;
+}
+
+.close-button:active {
+  scale: 0.95;
+}
+
+/* close button end */
+
+
+/* Input field */
+
+.left-panel, .right-panel {
+    width: 45%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.input {
+    height: 40px;
+    border-radius: 8px;
+    border: 1.3px solid hsl(120, 1%, 31%);
+    outline: none;
+    transition: 200ms ease-in;
+    padding-left: 1rem;
+    margin-top: 5px;
+}
+
+.input:focus {
+    border-bottom: 4px solid hsl(96, 37%, 58%);
+    padding-top: 2px;
+}
+
+.input::placeholder {
+    color: hsl(235, 100%, 2%);
+    opacity: 0.5;
+}
